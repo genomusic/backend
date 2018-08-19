@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+        <title>Genomify</title>
+    </head>
+    <style>
+        * {
+            font-family: "hind";
+        }
+    </style>
+    <body>
+        <div>
+            <span>Genres:</span>
+            <span id="favlist"></span>
+        </div>
+        <span>Preferences:</span>
+        <div class="preferences"></div>
+        <div>
+            {% for track in tracks %}
+                <p>{{ track }}</p>
+            {% endfor %}
+        </div>
+    </body>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="/static/radarChart.js"></script>
+    <script>
+        var data = {{ data | tojson | safe }};
+        console.log(data);
+    </script>
+    <script src="/static/index.js"></script>
+</html>
