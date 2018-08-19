@@ -4,9 +4,8 @@ import recommend
 import genomelink
 import os
 import numpy as np
-import multiprocessing.dummy
-
-p = multiprocessing.dummy.Pool(30)
+# from multiprocessing.dummy import Pool
+from multiprocessing import Pool
 
 app = Flask(__name__)
 
@@ -56,19 +55,18 @@ def connect():
 
     return render_template('connect.html', auth_url=authorize_url)
 
+def get_attribute(p):
+    attribute_name, token = p
+    return genomelink.Report.fetch(name=attribute_name, population='european', token=token)
+
 @app.route('/')
 def index():
     token = session.get('oauth_token')
     if not token:
         return redirect('/connect')
 
-    def get_attribute(attribute_name):
-        return genomelink.Report.fetch(name=attribute_name, population='european', token=token)
-
-    try:
-        attributes = np.array([x.summary['score'] for x in p.map(get_attribute, recommend.genomelink_attributes)])
-    except:
-        attributes = np.array([x.summary['score'] for x in p.map(get_attribute, recommend.genomelink_attributes)])
+    attributes = np.array(
+        [x.summary['score'] for x in p.map(get_attribute, map(lambda a: (a, token), recommend.genomelink_attributes))])
     pref = recommend.get_user_preference(attributes)
     fav = recommend.get_user_favorites(attributes)
     tracks = map(get_track_text, recommend.recommend(attributes)['tracks'])
@@ -77,6 +75,8 @@ def index():
         'preferences': {k.capitalize(): v for k, v in pref.items()},
         'favorites': fav
     }), tracks=tracks)
+
+
 
 def get_track_text(track):
     return '%s - %s - %s' % (', '.join(map(lambda a: a['name'], track['artists'])),
@@ -94,6 +94,8 @@ def callback():
     session['oauth_token'] = token
     return redirect(url_for('index'))
 
+
+p = Pool(30)
 
 app.secret_key = os.urandom(24)
 
