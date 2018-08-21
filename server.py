@@ -1,13 +1,17 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, jsonify
 import json
-import recommend
 import genomelink
 import os
+import spotipy
+import recommend
 import numpy as np
+from flask_cors import CORS
 # from multiprocessing.dummy import Pool
 from multiprocessing import Pool
 
 app = Flask(__name__)
+
+CORS(app)
 
 @app.route('/connect')
 def connect():
@@ -55,6 +59,52 @@ def connect():
 
     return render_template('connect.html', auth_url=authorize_url)
 
+@app.route('/get_url')
+def get_url():
+    authorize_url = genomelink.OAuth.authorize_url(scope=['''report:agreeableness
+        report:alcohol-drinking-behavior
+        report:anger
+        report:beard-thickness
+        report:bitter-taste
+        report:black-hair
+        report:blood-glucose
+        report:caffeine-consumption
+        report:calcium
+        report:carbohydrate-intake
+        report:childhood-intelligence
+        report:conscientiousness
+        report:depression
+        report:egg-allergy
+        report:endurance-performance
+        report:excessive-daytime-sleepiness
+        report:extraversion
+        report:freckles
+        report:gambling
+        report:eye-color
+        report:harm-avoidance
+        report:hearing-function
+        report:height
+        report:intelligence
+        report:iron
+        report:job-related-exhaustion
+        report:lobe-size
+        report:longevity
+        report:mathematical-ability
+        report:milk-allergy
+        report:morning-person
+        report:motion-sickness
+        report:neuroticism
+        report:novelty-seeking
+        report:openness
+        report:reading-and-spelling-ability
+        report:red-hair
+        report:red-wine-liking
+        report:reward-dependence
+        report:smoking-behavior
+        report:white-wine-liking'''.replace(' ', '').replace('\n', ' ')])
+
+    return jsonify(url=authorize_url)
+
 def get_attribute(p):
     attribute_name, token = p
     return genomelink.Report.fetch(name=attribute_name, population='european', token=token)
@@ -92,7 +142,8 @@ def callback():
         print(e.description)
 
     session['oauth_token'] = token
-    return redirect(url_for('index'))
+    print(token)
+    return redirect('http://localhost:3000/gene?genomelink_token=true')
 
 
 p = Pool(30)
