@@ -1,19 +1,21 @@
-from flask import Flask, render_template, request, redirect, session, url_for, jsonify
 import json
-import genomelink
 import os
-import spotipy
-import recommend
-import numpy as np
-from flask_cors import CORS
 from multiprocessing import Pool
 from uuid import uuid4
+
+import genomelink
+import numpy as np
+from flask import Flask, render_template, request, redirect, session, jsonify
+from flask_cors import CORS
+
+import recommend
 
 app = Flask(__name__)
 
 attribute_dict = {}
 
 CORS(app)
+
 
 @app.route('/connect')
 def connect():
@@ -61,6 +63,7 @@ def connect():
 
     return render_template('connect.html', auth_url=authorize_url)
 
+
 @app.route('/get_url')
 def get_url():
     authorize_url = genomelink.OAuth.authorize_url(scope=['''report:agreeableness
@@ -107,9 +110,11 @@ def get_url():
 
     return jsonify(url=authorize_url)
 
+
 def get_attribute(p):
     attribute_name, token = p
     return genomelink.Report.fetch(name=attribute_name, population='european', token=token)
+
 
 @app.route('/')
 def index():
@@ -135,6 +140,7 @@ def get_playlist(token_uuid):
     tracks = recommend.recommend(attributes)['tracks']
     return json.dumps(tracks)
 
+
 @app.route('/preferences/<string:token_uuid>')
 def get_preferences(token_uuid):
     attributes = attribute_dict[token_uuid]
@@ -144,11 +150,11 @@ def get_preferences(token_uuid):
     })
 
 
-
 def get_track_text(track):
     return '%s - %s - %s' % (', '.join(map(lambda a: a['name'], track['artists'])),
                              track['album']['name'],
                              track['name'])
+
 
 @app.route('/callback')
 def callback():
