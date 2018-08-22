@@ -1,1 +1,1 @@
-web: pip install -r requirements.txt && cd frontend/ && npm install && yarn build
+web: pip install -r requirements.txt && sh ./build_frontend.sh && python server.py
