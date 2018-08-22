@@ -1,1 +1,1 @@
-web: pip install -r requirements.txt && sh ./build_frontend.sh && python server.py
+web: sh ./build_frontend.sh && python server.py
