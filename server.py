@@ -178,4 +178,6 @@ p = Pool(30)
 
 app.secret_key = os.urandom(24)
 
-app.run(host='localhost', port=5000)
+on_heroku = os.environ.get("ON_HEROKU", False)
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0' if on_heroku else 'localhost', port=port)
