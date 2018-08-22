@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
 	recommendations = recommend(user_gene_attributes)['tracks']
 	print('\n'.join([track['id'] for track in recommendations]))
-	print(recommendations[0]['artists'])
+	print(recommendations[0]['preview_url'])

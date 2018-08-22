@@ -6,10 +6,12 @@ import spotipy
 import recommend
 import numpy as np
 from flask_cors import CORS
-# from multiprocessing.dummy import Pool
 from multiprocessing import Pool
+from uuid import uuid4
 
 app = Flask(__name__)
+
+attribute_dict = {}
 
 CORS(app)
 
@@ -127,6 +129,21 @@ def index():
     }), tracks=tracks)
 
 
+@app.route('/playlist/<string:token_uuid>')
+def get_playlist(token_uuid):
+    attributes = attribute_dict[token_uuid]
+    tracks = recommend.recommend(attributes)['tracks']
+    return json.dumps(tracks)
+
+@app.route('/preferences/<string:token_uuid>')
+def get_preferences(token_uuid):
+    attributes = attribute_dict[token_uuid]
+    preferences = recommend.get_user_preference(attributes)
+    return json.dumps({
+        k.capitalize(): v for k, v in preferences.items()
+    })
+
+
 
 def get_track_text(track):
     return '%s - %s - %s' % (', '.join(map(lambda a: a['name'], track['artists'])),
@@ -142,8 +159,13 @@ def callback():
         print(e.description)
 
     session['oauth_token'] = token
-    print(token)
-    return redirect('http://localhost:3000/gene?genomelink_token=true')
+
+    attributes = np.array(
+        [x.summary['score'] for x in p.map(get_attribute, map(lambda a: (a, token), recommend.genomelink_attributes))])
+
+    token_uuid = uuid4()
+    attribute_dict[str(token_uuid)] = attributes
+    return redirect('http://localhost:3000/gene?genomelink_token=%s' % str(token_uuid))
 
 
 p = Pool(30)
