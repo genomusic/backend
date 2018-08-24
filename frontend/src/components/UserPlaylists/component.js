@@ -25,11 +25,27 @@ class UserPlaylists extends Component {
     });
   }
 
+  renderGenePlaylist() {
+
+    const getPlaylistSongs = () => {
+      console.log('PLAYLIST SONGS??', this.props)
+      this.props.fetchGenomelinkSongsSuccess(this.props.genomelinkPlaylist);
+      this.props.updateHeaderTitle('Your Awesome Genetic Playlist');
+    };
+
+    return (
+      <li onClick={ getPlaylistSongs } className={this.props.title === 'Your Awesome Genetic Playlist' ? 'active side-menu-item gene-list' : 'side-menu-item gene-list'} key={ 9999999 }>
+        Your Genetic Playlist
+      </li>
+    );
+  }
+
   render() {
 
     return (
       <div className='user-playlist-container'>
         <h3 className='user-playlist-header'>Playlists</h3>
+        {this.renderGenePlaylist()}
         {
           this.props.playlistMenu && this.renderPlaylists()
         }
@@ -48,6 +64,7 @@ UserPlaylists.propTypes = {
   ]),
   fetchPlaylistsMenu: PropTypes.func,
   fetchPlaylistSongs: PropTypes.func,
+  fetchGenomelinkSongsSuccess: PropTypes.func,
   updateHeaderTitle: PropTypes.func
 };
 

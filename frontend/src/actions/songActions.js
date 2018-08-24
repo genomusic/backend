@@ -44,7 +44,7 @@ export const fetchSongs = (accessToken) => {
       }).join(',');
 
       dispatch(setArtistIds(artistIds));
-
+      console.log('SONGS', res.items)
       dispatch(fetchSongsSuccess(res.items));
     }).catch(err => {
       dispatch(fetchSongsError(err));
@@ -68,6 +68,23 @@ export const searchSongsSuccess = (songs) => {
 export const searchSongsError = () => {
   return {
     type: 'SEARCH_SONGS_ERROR'
+  };
+};
+
+export const fetchGenomelinkSongsSuccess = (data) => {
+
+  const songs = data ? data.map(item =>{
+    return {
+      added_at: new Date(),
+      added_by: 'Genomelink',
+      track: item,
+      isLocal: false
+    }
+  }) : []
+  console.log('FETCH_GENOMELINK_SONGS_SUCCESS', songs)
+  return {
+    type: 'FETCH_GENOMELINK_SONGS_SUCCESS',
+    songs
   };
 };
 
@@ -96,6 +113,91 @@ export const searchSongs = (searchTerm, accessToken) => {
       dispatch(searchSongsSuccess(res.items));
     }).catch(err => {
       dispatch(fetchSongsError(err));
+    });
+  };
+};
+
+
+export const fetchGenomePlaylistPending = () => {
+  return {
+    type: 'FETCH_GENOME_PLAYLIST_PENDING'
+  };
+};
+
+export const fetchGenomePlaylistSuccess = (songs) => {
+  return {
+    type: 'FETCH_FETCH_GENOME_PLAYLIST_SUCCESS',
+    songs
+  };
+};
+
+export const fetchGenomePlaylistError = () => {
+  return {
+    type: 'FETCH_FETCH_GENOME_PLAYLIST_ERROR'
+  };
+};
+
+export const fetchGenomePlaylist = (accessToken) => {
+  return dispatch => {
+    console.log('ACCESS', accessToken)
+    const request = new Request(`http://localhost:5000/playlist/${accessToken}`);
+    console.log('REQQQ', request)
+    // dispatch(fetchGenomePlaylistPending());
+
+    fetch(request).then(res => {
+      return res.json();
+    }).then(res => {
+      //remove duplicates from recently played
+      // res.items = uniqBy(res.items, (item) => {
+      //   return item.track.id;
+      // });
+      console.log('PLAYLIST', res)
+      dispatch(fetchGenomePlaylistSuccess(res));
+      dispatch(fetchGenomelinkSongsSuccess(res));
+    }).catch(err => {
+      dispatch(fetchGenomePlaylistError(err));
+    });
+  };
+};
+
+
+export const fetchPrefPending = () => {
+  return {
+    type: 'FETCH_PREF_PENDING'
+  };
+};
+
+export const fetchPrefSuccess = (songs) => {
+  return {
+    type: 'FETCH_FETCH_PREF_SUCCESS',
+    songs
+  };
+};
+
+export const fetchPrefError = () => {
+  return {
+    type: 'FETCH_FETCH_PREF_ERROR'
+  };
+};
+
+export const fetchPrefs = (accessToken) => {
+  return dispatch => {
+    console.log('ACCESS', accessToken)
+    const request = new Request(`http://localhost:5000/preferences/${accessToken}`);
+    console.log('REQQQ', request)
+    // dispatch(fetchGenomePlaylistPending());
+
+    fetch(request).then(res => {
+      return res.json();
+    }).then(res => {
+      //remove duplicates from recently played
+      // res.items = uniqBy(res.items, (item) => {
+      //   return item.track.id;
+      // });
+      console.log('PREFS', res)
+      dispatch(fetchPrefSuccess(res));
+    }).catch(err => {
+      dispatch(fetchGenomePlaylistError(err));
     });
   };
 };

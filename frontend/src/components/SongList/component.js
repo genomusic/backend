@@ -18,6 +18,7 @@ class SongList extends Component {
   }
 
   renderSongs() {
+    console.log('CAN REDER??', this.props)
     return this.props.songs.map((song, i) => {
       const buttonClass = song.track.id === this.props.songId && !this.props.songPaused ? "fa-pause-circle-o" : "fa-play-circle-o";
 
@@ -69,7 +70,7 @@ class SongList extends Component {
   }
 
   render() {
-
+    console.log('BOOLS', this.props.songs ,this.props.fetchSongsPending ,this.props.fetchPlaylistSongsPending )
     return (
       <div>
         <div className='song-header-container'>

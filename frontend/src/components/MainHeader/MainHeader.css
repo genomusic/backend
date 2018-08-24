@@ -2,6 +2,8 @@
   display: flex;
 }
 
+
+
 .browse-headers p {
   color: rgb(179, 179, 179);
   font-size: 14px;
@@ -26,6 +28,10 @@
 
 .playlist-title-container {
   display: flex;
+}
+
+.gene-cont{
+  margin-bottom: 60px;
 }
 
 .playlist-info-container {

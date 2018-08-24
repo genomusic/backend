@@ -136,14 +136,19 @@ def index():
 
 @app.route('/playlist/<string:token_uuid>')
 def get_playlist(token_uuid):
+    print ('TOKENNNN')
+    print(attribute_dict)
     attributes = attribute_dict[token_uuid]
     tracks = recommend.recommend(attributes)['tracks']
+    print(tracks)
     return json.dumps(tracks)
 
 
 @app.route('/preferences/<string:token_uuid>')
 def get_preferences(token_uuid):
+    print (attribute_dict[token_uuid])
     attributes = attribute_dict[token_uuid]
+
     preferences = recommend.get_user_preference(attributes)
     return json.dumps({
         k.capitalize(): v for k, v in preferences.items()

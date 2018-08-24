@@ -1,5 +1,5 @@
 const defaultState = {
-  title: 'Songs'
+  title: 'Your Awesome Genetic Playlist'
 };
 
 export const uiReducer = (state = defaultState, action) => {

@@ -5,6 +5,10 @@
   font-family: 'Proxima Bold', Georgia, sans-serif;
 }
 
+.gene {
+  display: block;
+}
+
 .main-pause-play-btn {
   background: #1db954;
   font-family: 'Proxima Nova', Georgia, sans-serif;

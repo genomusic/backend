@@ -1,5 +1,5 @@
 const defaultState = {
-  fetchSongsPending: true,
+  fetchSongsPending: false,
   songPlaying: false,
   timeElapsed: 0,
   songId: 0,
@@ -8,7 +8,7 @@ const defaultState = {
 };
 
 export const songsReducer = (state = defaultState, action) => {
-
+  console.log('WHATS CHANGING', action.type)
   switch (action.type) {
 
   case "UPDATE_VIEW_TYPE":
@@ -83,13 +83,34 @@ export const songsReducer = (state = defaultState, action) => {
       fetchSongsPending: false
     };
 
+  case "FETCH_FETCH_GENOME_PLAYLIST_SUCCESS":
+    console.log('FETCH_FETCH_GENOME_PLAYLIST_SUCCESS', action.songs)
+    return {
+      ...state,
+      genomelinkPlaylist: action.songs,
+      fetchPlaylistSongsError: false,
+      fetchPlaylistSongsPending: false
+    };
+
   case "FETCH_PLAYLIST_SONGS_PENDING":
     return {
       ...state,
       fetchPlaylistSongsPending: true
     };
 
+  case "FETCH_GENOMELINK_SONGS_SUCCESS":
+
+    return {
+      ...state,
+      songs: action.songs,
+      viewType: 'genomelink',
+      fetchPlaylistSongsError: false,
+      fetchPlaylistSongsPending: false
+    };
+
   case "FETCH_PLAYLIST_SONGS_SUCCESS":
+
+    console.log('FETCH_PLAYLIST_SONGS_SUCCESS', action.songs)
     return {
       ...state,
       songs: action.songs,

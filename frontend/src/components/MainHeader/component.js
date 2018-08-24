@@ -21,11 +21,16 @@ const MainHeader = ({
   let currentPlaylist;
   let currentArtist;
 
+  console.log('VIEWTYPE', viewType)
   if(viewType === 'playlist') {
     currentPlaylist = playlists.filter(playlist => {
       return playlist.name === headerTitle;
     })[0];
   }
+  // if(viewType === 'genomelink') {
+  //   console.log('Current playlist', currentPlaylist)
+  //   return headerTitle
+  // }
 
   if(viewType === 'Artist' && artists.length > 0) {
     currentArtist = artists.filter(artist => {
@@ -39,12 +44,35 @@ const MainHeader = ({
       {viewType === 'playlist' && (
         <div className='playlist-title-container'>
           <div className='playlist-image-container'>
-            <img className='playlist-image' src={currentPlaylist.images[0] ? currentPlaylist.images[0].url : null} />
+          { currentPlaylist && currentPlaylist.images ?
+            <img className='playlist-image' src={currentPlaylist.images[0] ? currentPlaylist.images[0].url : null} /> : <div></div>
+          }
           </div>
           <div className='playlist-info-container'>
             <p className='playlist-text'>PLAYLIST</p>
             <h3 className='header-title'>{headerTitle}</h3>
             <p className='created-by'>Created By: <span className='lighter-text'>{currentPlaylist.owner.display_name}</span> - {currentPlaylist.tracks.total} songs</p>
+            <button
+              onClick={!songPaused ? pauseSong : resumeSong}
+              className='main-pause-play-btn gene'>
+              {songPaused ? 'PLAY' : 'PAUSE'}
+            </button>
+
+          </div>
+        </div>
+      )}
+
+      {viewType === 'genomelink' && (
+        <div className='playlist-title-container gene-cont'>
+          <div className='playlist-image-container'>
+            { currentPlaylist && currentPlaylist.images ?
+              <img className='playlist-image' src={currentPlaylist.images[0] ? currentPlaylist.images[0].url : null} /> : <div></div>
+            }
+          </div>
+          <div className='playlist-info-container'>
+            <p className='playlist-text'>PLAYLIST</p>
+            <h3 className='header-title'>Your Awesome Genetic Playlist</h3>
+            <p className='created-by'>Created By: <span className='lighter-text'>Genomelink API</span></p>
             <button
               onClick={!songPaused ? pauseSong : resumeSong}
               className='main-pause-play-btn'>

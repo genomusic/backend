@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { fetchUser } from './actions/userActions';
 import { setToken, setGenomelinkToken } from './actions/tokenActions';
 import { playSong, stopSong, pauseSong, resumeSong } from './actions/songActions';
+import { fetchGenomePlaylist } from "./actions/songActions";
 import './App.css';
 import Particles from 'react-particles-js';
 
@@ -33,7 +34,7 @@ class App extends Component {
     var url = new URL(window.location);
     console.log('PARAMSS', hashParams.access_token)
 	  if(hashParams.access_token || localStorage.getItem('spotifyToken')) {
-	    console.log('WHAT HAPPENED', hashParams.access_token)
+
       if(hashParams.access_token) localStorage.setItem('spotifyToken', hashParams.access_token)
 	    this.props.setToken(hashParams.access_token || localStorage.getItem('spotifyToken'));
 	  }
@@ -41,16 +42,22 @@ class App extends Component {
 	  const hasGeneToken = url.searchParams.get("genomelink_token")
 
     if(hasGeneToken || localStorage.getItem('genomelinkToken')) {
-      localStorage.setItem('genomelinkToken', hasGeneToken)
+      if (hasGeneToken) localStorage.setItem('genomelinkToken', hasGeneToken)
       this.props.setGenomelinkToken(hasGeneToken || localStorage.getItem('genomelinkToken'));
     }
 
 	}
 
 	componentWillReceiveProps(nextProps) {
-	  // if(nextProps.token) {
-	  //   this.props.fetchUser(nextProps.token);
-	  // };
+	  if(nextProps.token) {
+	    this.props.fetchUser(nextProps.token);
+	  };
+
+    if(nextProps.canLogin) {
+      console.log('GOT TOKEN!!!', localStorage.getItem('genomelinkToken'))
+      this.props.fetchGenomePlaylist(localStorage.getItem('genomelinkToken'))
+    }
+
 
 	  if(this.audio !== undefined) {
 	    this.audio.volume = nextProps.volume / 100;
@@ -239,6 +246,7 @@ const mapStateToProps = (state) => {
   return {
     canLogin: state.tokenReducer.token && state.tokenReducer.genomelinkToken,
     token: state.tokenReducer.token,
+    genomelinkToken: state.genomelinkToken,
     volume: state.soundReducer.volume
   };
 
@@ -250,6 +258,7 @@ const mapDispatchToProps = dispatch => {
     fetchUser,
     setToken,
     setGenomelinkToken,
+    fetchGenomePlaylist,
     playSong,
     stopSong,
     pauseSong,

@@ -65,7 +65,6 @@ const SideMenu = ({
   return (
     <ul className='side-menu-container'>
       <li onClick={ handleBrowseClick } className={title === 'Browse' ? 'active side-menu-item': 'side-menu-item'}>Browse</li>
-      <li className='side-menu-item radio'>Radio</li>
       <h3 className='user-library-header'>Your Library</h3>
       {
         renderSideMenu()
