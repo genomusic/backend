@@ -10,7 +10,7 @@ let appPath = process.cwd();
 const addition_path = process.env.FRONT_END_PATH;
 
 if (addition_path) {
-  appPath += addition_path
+  appPath = appPath.concat(addition_path);
 }
 
 const appDirectory = fs.realpathSync(appPath);
