@@ -16,6 +16,8 @@ attribute_dict = {}
 
 CORS(app)
 
+base_path = os.environ.get('BASE_PATH') or 'http://localhost:5000/'
+
 
 @app.route('/connect')
 def connect():
@@ -136,7 +138,7 @@ def index():
 
 @app.route('/playlist/<string:token_uuid>')
 def get_playlist(token_uuid):
-    print ('TOKENNNN')
+    print('TOKENNNN')
     print(attribute_dict)
     attributes = attribute_dict[token_uuid]
     tracks = recommend.recommend(attributes)['tracks']
@@ -146,7 +148,7 @@ def get_playlist(token_uuid):
 
 @app.route('/preferences/<string:token_uuid>')
 def get_preferences(token_uuid):
-    print (attribute_dict[token_uuid])
+    print(attribute_dict[token_uuid])
     attributes = attribute_dict[token_uuid]
 
     preferences = recommend.get_user_preference(attributes)
@@ -176,7 +178,7 @@ def callback():
 
     token_uuid = uuid4()
     attribute_dict[str(token_uuid)] = attributes
-    return redirect('http://localhost:3000/gene?genomelink_token=%s' % str(token_uuid))
+    return redirect(f'{base_path}/gene?genomelink_token=%s' % str(token_uuid))
 
 
 p = Pool(30)
