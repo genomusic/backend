@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from multiprocessing import Pool
 from uuid import uuid4
@@ -7,6 +8,7 @@ import genomelink
 import numpy as np
 from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_cors import CORS
+
 
 import recommend
 
@@ -121,6 +123,7 @@ def get_attribute(p):
 @app.route('/')
 def index():
     token = session.get('oauth_token')
+
     if not token:
         return redirect('/connect')
 
@@ -167,6 +170,7 @@ def get_track_text(track):
 def callback():
     try:
         token = genomelink.OAuth.token(request_url=request.url)
+        print(f'Recieved token {token}')
     except genomelink.errors.GenomeLinkError as e:
         print(e.error)
         print(e.description)
