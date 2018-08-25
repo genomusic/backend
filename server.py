@@ -135,7 +135,7 @@ def index():
 
     return render_template('index.html', data=json.dumps({
         'preferences': {k.capitalize(): v for k, v in pref.items()},
-        'favorites': fav
+        'favorites': list(fav)
     }), tracks=tracks)
 
 
