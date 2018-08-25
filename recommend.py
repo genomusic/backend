@@ -15,7 +15,7 @@ SPOTIFY_SECRET = '7bff820e9a1742b79d03fa0bfb2b313a'
 
 os.environ['GENOMELINK_CLIENT_ID'] = GENOMELINK_CLIENT
 os.environ['GENOMELINK_CLIENT_SECRET'] = GENOMELINK_SECRET
-os.environ['GENOMELINK_CALLBACK_URL'] = 'http://127.0.0.1:5000/callback'
+os.environ['GENOMELINK_CALLBACK_URL'] = os.environ.get('GENOMELINK_CALLBACK_URL') or 'http://127.0.0.1:5000/callback'
 os.environ['DEBUG'] = '1'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
