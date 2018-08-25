@@ -63,7 +63,7 @@ def connect():
         report:smoking-behavior
         report:white-wine-liking'''.replace(' ', '').replace('\n', ' ')])
 
-    return render_template('index.html', auth_url=authorize_url)
+    return render_template('connect.html', auth_url=authorize_url)
 
 
 @app.route('/get_url')
