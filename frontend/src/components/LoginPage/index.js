@@ -13,11 +13,10 @@ class LoginPage extends Component {
         super(props);
 
 
-        this.props.getGenomelinkUrl();
-        this.state = {}
+        this.state = {};
 
-        this.onSpotifyLoginClick = this.onSpotifyLoginClick.bind(this)
-        this.onGenomelinkLoginClick = this.onGenomelinkLoginClick.bind(this)
+        this.onSpotifyLoginClick = this.onSpotifyLoginClick.bind(this);
+        this.onGenomelinkLoginClick = this.onGenomelinkLoginClick.bind(this);
     }
 
     onSpotifyLoginClick() {

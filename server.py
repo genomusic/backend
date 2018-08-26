@@ -133,6 +133,7 @@ def index():
     fav = recommend.get_user_favorites(attributes)
     tracks = map(get_track_text, recommend.recommend(attributes)['tracks'])
 
+    print(f'rendering index.html, favs = {fav}, pref = {pref}')
     return render_template('index.html', data=json.dumps({
         'preferences': {k.capitalize(): v for k, v in pref.items()},
         'favorites': list(fav)
@@ -183,7 +184,7 @@ def callback():
     token_uuid = uuid4()
     attribute_dict[str(token_uuid)] = attributes
     print(f'redirecting to base path {base_path}')
-    return redirect(f'{base_path}/?genomelink_token=%s' % str(token_uuid))
+    return redirect(f'{base_path}?genomelink_token=%s' % str(token_uuid))
 
 
 p = Pool(30)
