@@ -184,7 +184,6 @@ def callback():
     token_uuid = uuid4()
     attribute_dict[str(token_uuid)] = attributes
 
-    print(f'attr dict{json.dumps(attribute_dict)}')
 
     print(f'redirecting to base path {base_path}')
     return redirect(f'{base_path}?genomelink_token=%s' % str(token_uuid))
