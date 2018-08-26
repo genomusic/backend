@@ -5,9 +5,8 @@ from uuid import uuid4
 
 import genomelink
 import numpy as np
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session
 from flask_cors import CORS
-
 
 import recommend
 
@@ -184,6 +183,9 @@ def callback():
 
     token_uuid = uuid4()
     attribute_dict[str(token_uuid)] = attributes
+
+    print(f'attr dict{json.dumps(attribute_dict)}')
+
     print(f'redirecting to base path {base_path}')
     return redirect(f'{base_path}?genomelink_token=%s' % str(token_uuid))
 
