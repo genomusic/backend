@@ -117,6 +117,7 @@ def get_url():
 
 def get_attribute(p):
     attribute_name, token = p
+    print(f'get attr {p}')
     return genomelink.Report.fetch(name=attribute_name, population='european', token=token)
 
 
@@ -152,7 +153,7 @@ def get_playlist(token_uuid):
 
 @app.route('/preferences/<string:token_uuid>')
 def get_preferences(token_uuid):
-    print(attribute_dict[token_uuid])
+    print(f'pref {attribute_dict[token_uuid]}')
     attributes = attribute_dict[token_uuid]
 
     preferences = recommend.get_user_preference(attributes)
