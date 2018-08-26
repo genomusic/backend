@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 from multiprocessing import Pool
 from uuid import uuid4
@@ -125,7 +124,7 @@ def index():
     token = session.get('oauth_token')
 
     if not token:
-        return redirect('/connect')
+        return render_template('index.html')
 
     attributes = np.array(
         [x.summary['score'] for x in p.map(get_attribute, map(lambda a: (a, token), recommend.genomelink_attributes))])

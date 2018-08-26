@@ -140,7 +140,7 @@ export const fetchGenomePlaylistError = () => {
 export const fetchGenomePlaylist = (accessToken) => {
   return dispatch => {
     console.log('ACCESS', accessToken)
-    const request = new Request(`http://localhost:5000/playlist/${accessToken}`);
+    const request = new Request(`https://genomusic.herokuapp.com/playlist/${accessToken}`);
     console.log('REQQQ', request)
     // dispatch(fetchGenomePlaylistPending());
 
@@ -183,8 +183,8 @@ export const fetchPrefError = () => {
 export const fetchPrefs = (accessToken) => {
   return dispatch => {
     console.log('ACCESS', accessToken)
-    const request = new Request(`http://localhost:5000/preferences/${accessToken}`);
-    console.log('REQQQ', request)
+    const request = new Request(`https://genomusic.herokuapp.com/preferences/${accessToken}`);
+    console.log('REQQQ', request);
     // dispatch(fetchGenomePlaylistPending());
 
     fetch(request).then(res => {

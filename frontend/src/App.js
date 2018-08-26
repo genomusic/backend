@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { fetchUser } from './actions/userActions';
-import { setToken, setGenomelinkToken } from './actions/tokenActions';
-import { playSong, stopSong, pauseSong, resumeSong } from './actions/songActions';
-import { fetchGenomePlaylist } from "./actions/songActions";
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {fetchUser} from './actions/userActions';
+import {setGenomelinkToken, setToken} from './actions/tokenActions';
+import {fetchGenomePlaylist, pauseSong, playSong, resumeSong, stopSong} from './actions/songActions';
 import './App.css';
 import Particles from 'react-particles-js';
 
@@ -21,144 +20,145 @@ import SideMenu from './components/SideMenu';
 
 class App extends Component {
 
-	static audio;
+    static audio;
 
-	componentDidMount() {
+    componentDidMount() {
 
-	  let hashParams = {};
-	  let e, r = /([^&;=]+)=?([^&;]*)/g,
-	    q = window.location.hash.substring(1);
-	  while ( e = r.exec(q)) {
-	    hashParams[e[1]] = decodeURIComponent(e[2]);
-	  }
-    var url = new URL(window.location);
-    console.log('PARAMSS', hashParams.access_token)
-	  if(hashParams.access_token || localStorage.getItem('spotifyToken')) {
+        let hashParams = {};
+        let e, r = /([^&;=]+)=?([^&;]*)/g, q = window.location.hash.substring(1);
+        while (e = r.exec(q)) {
+            hashParams[e[1]] = decodeURIComponent(e[2]);
+        }
 
-      if(hashParams.access_token) localStorage.setItem('spotifyToken', hashParams.access_token)
-	    this.props.setToken(hashParams.access_token || localStorage.getItem('spotifyToken'));
-	  }
+        let url = new URL(window.location);
+        console.log('PARAMSS', hashParams.access_token);
 
-	  const hasGeneToken = url.searchParams.get("genomelink_token")
+        if (hashParams.access_token || localStorage.getItem('spotifyToken')) {
+            if (hashParams.access_token) localStorage.setItem('spotifyToken', hashParams.access_token);
+            this.props.setToken(hashParams.access_token || localStorage.getItem('spotifyToken'));
+        }
 
-    if(hasGeneToken || localStorage.getItem('genomelinkToken')) {
-      if (hasGeneToken) localStorage.setItem('genomelinkToken', hasGeneToken)
-      this.props.setGenomelinkToken(hasGeneToken || localStorage.getItem('genomelinkToken'));
+        const hasGeneToken = url.searchParams.get("genomelink_token");
+
+        if (hasGeneToken || localStorage.getItem('genomelinkToken')) {
+            if (hasGeneToken) localStorage.setItem('genomelinkToken', hasGeneToken);
+            this.props.setGenomelinkToken(hasGeneToken || localStorage.getItem('genomelinkToken'));
+        }
+
     }
 
-	}
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.token) {
+            this.props.fetchUser(nextProps.token);
+        }
 
-	componentWillReceiveProps(nextProps) {
-	  if(nextProps.token) {
-	    this.props.fetchUser(nextProps.token);
-	  };
 
-    if(nextProps.canLogin) {
-      console.log('GOT TOKEN!!!', localStorage.getItem('genomelinkToken'))
-      this.props.fetchGenomePlaylist(localStorage.getItem('genomelinkToken'))
+        if (nextProps.canLogin) {
+            console.log('GOT TOKEN!!!', localStorage.getItem('genomelinkToken'));
+            this.props.fetchGenomePlaylist(localStorage.getItem('genomelinkToken'))
+        }
+
+
+        if (this.audio !== undefined) {
+            this.audio.volume = nextProps.volume / 100;
+        }
+
     }
 
+    stopSong = () => {
+        if (this.audio) {
+            this.props.stopSong();
+            this.audio.pause();
+        }
+    };
 
-	  if(this.audio !== undefined) {
-	    this.audio.volume = nextProps.volume / 100;
-	  }
+    pauseSong = () => {
+        if (this.audio) {
+            this.props.pauseSong();
+            this.audio.pause();
+        }
+    };
 
-	}
+    resumeSong = () => {
+        if (this.audio) {
+            this.props.resumeSong();
+            this.audio.play();
+        }
+    };
 
-	stopSong = () => {
-	  if(this.audio) {
-	    this.props.stopSong();
-	    this.audio.pause();
-	  }
-	}
+    audioControl = (song) => {
 
-	pauseSong = () => {
-	  if(this.audio) {
-	    this.props.pauseSong();
-	    this.audio.pause();
-	  }
-	}
+        const {playSong, stopSong} = this.props;
 
-	resumeSong = () => {
-	  if(this.audio) {
-	    this.props.resumeSong();
-	    this.audio.play();
-	  }
-	}
+        if (this.audio === undefined) {
+            playSong(song.track);
+            this.audio = new Audio(song.track.preview_url);
+            this.audio.play();
+        } else {
+            stopSong();
+            this.audio.pause();
+            playSong(song.track);
+            this.audio = new Audio(song.track.preview_url);
+            this.audio.play();
+        }
+    };
 
-	audioControl = (song) => {
-
-	  const { playSong, stopSong } = this.props;
-
-	  if(this.audio === undefined){
-	    playSong(song.track);
-	    this.audio = new Audio(song.track.preview_url);
-	    this.audio.play();
-	  } else {
-	    stopSong();
-	    this.audio.pause();
-	    playSong(song.track);
-	    this.audio = new Audio(song.track.preview_url);
-	    this.audio.play();
-	  }
-	}
-
-	render() {
-		if(this.props.canLogin){
+    render() {
+        if (this.props.canLogin) {
             return (
 
-				<div className='App'>
+                <div className='App'>
                     {CustomParticles}
 
-					<div className='app-container'>
+                    <div className='app-container'>
 
-						<div className='left-side-section'>
-							<SideMenu />
-							<UserPlaylists />
-							<ArtWork />
-						</div>
+                        <div className='left-side-section'>
+                            <SideMenu/>
+                            <UserPlaylists/>
+                            <ArtWork/>
+                        </div>
 
-						<div className='main-section'>
-							<Header />
-							<div className='main-section-container'>
-								<MainHeader
-									pauseSong={ this.pauseSong }
-									resumeSong={ this.resumeSong }
-								/>
-								<MainView
-									pauseSong={this.pauseSong}
-									resumeSong={ this.resumeSong }
-									audioControl={ this.audioControl }
-								/>
-							</div>
-						</div>
+                        <div className='main-section'>
+                            <Header/>
+                            <div className='main-section-container'>
+                                <MainHeader
+                                    pauseSong={this.pauseSong}
+                                    resumeSong={this.resumeSong}
+                                />
+                                <MainView
+                                    pauseSong={this.pauseSong}
+                                    resumeSong={this.resumeSong}
+                                    audioControl={this.audioControl}
+                                />
+                            </div>
+                        </div>
 
-						<Footer
-							stopSong={ this.stopSong }
-							pauseSong={ this.pauseSong }
-							resumeSong={ this.resumeSong }
-							audioControl={ this.audioControl }
-						/>
-					</div>
-				</div>
+                        <Footer
+                            stopSong={this.stopSong}
+                            pauseSong={this.pauseSong}
+                            resumeSong={this.resumeSong}
+                            audioControl={this.audioControl}
+                        />
+                    </div>
+                </div>
             );
 
-        }else {
+        } else {
 
             return (
-				<div>
-					<LoginPage/>
+                <div>
+                    <LoginPage/>
                     {CustomParticles}
 
-				</div>
+                </div>
             )
         }
 
 
-	}
+    }
 }
 
-const CustomParticles = (<Particles  className={'part'} params={{
+const CustomParticles = (<Particles className={'part'} params={{
     particles: {
         number: {
             value: 80,
@@ -231,39 +231,39 @@ const CustomParticles = (<Particles  className={'part'} params={{
 }}/>)
 
 App.propTypes = {
-  token: PropTypes.string,
-  fetchUser: PropTypes.func,
-  setToken: PropTypes.func,
-  pauseSong: PropTypes.func,
-  playSong: PropTypes.func,
-  stopSong: PropTypes.func,
-  resumeSong: PropTypes.func,
-  volume: PropTypes.number
+    token: PropTypes.string,
+    fetchUser: PropTypes.func,
+    setToken: PropTypes.func,
+    pauseSong: PropTypes.func,
+    playSong: PropTypes.func,
+    stopSong: PropTypes.func,
+    resumeSong: PropTypes.func,
+    volume: PropTypes.number
 };
 
 const mapStateToProps = (state) => {
 
-  return {
-    canLogin: state.tokenReducer.token && state.tokenReducer.genomelinkToken,
-    token: state.tokenReducer.token,
-    genomelinkToken: state.genomelinkToken,
-    volume: state.soundReducer.volume
-  };
+    return {
+        canLogin: state.tokenReducer.token && state.tokenReducer.genomelinkToken,
+        token: state.tokenReducer.token,
+        genomelinkToken: state.genomelinkToken,
+        volume: state.soundReducer.volume
+    };
 
 };
 
 const mapDispatchToProps = dispatch => {
 
-  return bindActionCreators({
-    fetchUser,
-    setToken,
-    setGenomelinkToken,
-    fetchGenomePlaylist,
-    playSong,
-    stopSong,
-    pauseSong,
-    resumeSong
-  },dispatch);
+    return bindActionCreators({
+        fetchUser,
+        setToken,
+        setGenomelinkToken,
+        fetchGenomePlaylist,
+        playSong,
+        stopSong,
+        pauseSong,
+        resumeSong
+    }, dispatch);
 
 };
 
