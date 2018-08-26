@@ -25,7 +25,7 @@ class LoginPage extends Component {
     }
 
     onGenomelinkLoginClick() {
-        window.location.href = this.props.genomelinkUrl
+        window.location.href = 'https://genomusic.herokuapp.com/get_url'
     }
 
     render() {

@@ -111,7 +111,8 @@ def get_url():
         report:smoking-behavior
         report:white-wine-liking'''.replace(' ', '').replace('\n', ' ')])
 
-    return jsonify(url=authorize_url)
+    # return jsonify(url=authorize_url)
+    return redirect(authorize_url)
 
 
 def get_attribute(p):
