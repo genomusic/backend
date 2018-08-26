@@ -131,7 +131,9 @@ def index():
         [x.summary['score'] for x in p.map(get_attribute, map(lambda a: (a, token), recommend.genomelink_attributes))])
     pref = recommend.get_user_preference(attributes)
     fav = recommend.get_user_favorites(attributes)
-    tracks = map(get_track_text, recommend.recommend(attributes)['tracks'])
+
+    tracks_list = recommend.recommend(attributes).get('tracks')
+    tracks = map(get_track_text, tracks_list) if tracks_list else None
 
     print(f'rendering index.html, favs = {fav}, pref = {pref}')
     return render_template('index.html', data=json.dumps({
