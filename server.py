@@ -145,7 +145,7 @@ def get_playlist(token_uuid):
     print('TOKENNNN')
     print(attribute_dict)
     attributes = attribute_dict[token_uuid]
-    tracks = recommend.recommend(attributes)['tracks']
+    tracks = recommend.recommend(attributes).get('tracks')
     print(tracks)
     return json.dumps(tracks)
 

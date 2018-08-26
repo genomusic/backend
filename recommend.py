@@ -71,8 +71,9 @@ def recommend(user):
 
         try:
             return spotify.recommendations(seed_genres=genres, **{k: v for k, v in sample(targets.items(), 3)})
-        except:
+        except Exception as e:
             try_count = try_count + 1
+            print(f'error getting spotify recommendation - {e}')
             pass
 
 
