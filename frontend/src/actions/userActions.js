@@ -51,7 +51,7 @@ export const getGenomelinkUrlError = () => {
 export const getGenomelinkUrl = () => {
 
   return dispatch => {
-    const request = new Request('https://https://genomusic.herokuapp.com//get_url', {
+    const request = new Request('https://genomusic.herokuapp.com/get_url', {
       // headers: new Headers({
       //   'Authorization': 'Bearer ' + accessToken
       // })
