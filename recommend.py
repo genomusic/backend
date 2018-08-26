@@ -64,10 +64,15 @@ def get_user_favorites(user_gene_attributes):
 def recommend(user):
     genres = get_user_favorites(user)
     targets = {'target_' + k: v for k, v in get_user_preference(user).items()}
+    try_count = 0
     while True:
+        if try_count > 10:
+            return {}
+
         try:
             return spotify.recommendations(seed_genres=genres, **{k: v for k, v in sample(targets.items(), 3)})
         except:
+            try_count = try_count + 1
             pass
 
 
